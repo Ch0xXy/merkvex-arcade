@@ -16,13 +16,42 @@ import { dirname, join } from "node:path";
 import pg from "pg";
 
 const databaseUrl = process.env.DATABASE_URL?.trim();
-const onVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+// Vercel sets VERCEL=1 on build + runtime; also treat CI as non-fatal
+const onVercel =
+  process.env.VERCEL === "1" ||
+  process.env.VERCEL === "true" ||
+  Boolean(process.env.VERCEL_ENV) ||
+  process.env.CI === "1" ||
+  process.env.CI === "true";
 
 if (!databaseUrl) {
   console.log(
     "[migrate] DATABASE_URL not set — skipping (PGLite / already-migrated Supabase).",
   );
   process.exit(0);
+}
+
+// Catch placeholder URIs from docs/tutorials (e.g. user:password@… or user 'user')
+if (
+  /:\/\/user:|@host|YOUR_PASSWORD|\[YOUR-PASSWORD\]|postgres:password@/i.test(
+    databaseUrl,
+  ) ||
+  /\/\/user@|\/\/user:/.test(databaseUrl)
+) {
+  console.error(
+    "[migrate] DATABASE_URL looks like a placeholder (user/password not real Supabase creds).",
+  );
+  console.error(
+    "[migrate] Supabase → Project Settings → Database → Connection string (URI).",
+  );
+  console.error(
+    "[migrate] Use the real password (not [YOUR-PASSWORD]). Prefer Session mode if Transaction pooler fails.",
+  );
+  if (onVercel) {
+    console.error("[migrate] non-fatal on Vercel — deploy continues.");
+    process.exit(0);
+  }
+  process.exit(1);
 }
 
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
