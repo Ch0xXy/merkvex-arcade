@@ -1,5 +1,8 @@
 # Make Merkvex Arcade live (no local terminal required after this)
 
+**LIVE:** https://merkvex-arcade.vercel.app/arcade  
+Wired into main site `arcade.html` as `PRODUCTION_ARCADE` (2026-08-01).
+
 The arcade is a **separate cloud app**. Your PC PowerShell is only for development. Once Vercel is connected to GitHub, every push deploys itself.
 
 ## Why not Netlify with the main site?
@@ -20,14 +23,15 @@ GitHub: **https://github.com/Ch0xXy/merkvex-arcade**
 2. Sign in with **GitHub** (Ch0xXy)
 3. Import **`merkvex-arcade`**
 4. Framework: leave default / leave blank (build uses `npm run build`)
-5. **Environment variables** (optional first deploy, recommended second):
+5. **Environment variables** — Merkvex uses **Supabase** (not Neon):
    - Name: `DATABASE_URL`
-   - Value: Neon (or any Postgres) connection string  
-   - Without it: app still works; global boards use temporary storage
-6. Click **Deploy**
-7. Copy the production URL, e.g.  
-   `https://merkvex-arcade.vercel.app`  
-   (exact name may differ — use what Vercel shows)
+   - Value: Supabase Dashboard → project **kywqyvygmvogsgcpbajj** (prod) → **Project Settings → Database → Connection string → URI**
+   - Prefer **Transaction pooler** (port **6543**) for Vercel
+   - Replace `[YOUR-PASSWORD]` with the DB password
+   - `arcade_scores` table is already created on prod via Supabase migration
+   - Without `DATABASE_URL`: app still works; global boards use temporary PGLite
+6. Click **Deploy** (or Redeploy after saving the env var)
+7. Production URL: **https://merkvex-arcade.vercel.app**
 
 ### 3. Point the main Merkvex site at that URL
 
