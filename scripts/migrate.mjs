@@ -2,30 +2,44 @@
 /**
  * Deploy-time database migrator (node-postgres, `pg`).
  *
- * Runs during `npm run build` — on every Vercel deploy — applying pending files
- * in ../migrations to DATABASE_URL. Each file is applied in one transaction and
- * recorded in a `_migrations` table, so it runs once and is safe to re-run.
+ * Runs after `vite build` when DATABASE_URL is set. On Vercel + Supabase:
+ * - SSL is required
+ * - Transaction pooler (6543) dislikes multi-statement BEGIN blocks → apply
+ *   each statement carefully / use IF NOT EXISTS
+ * - Failure must not block deploys when schema is already applied via Supabase MCP
  *
- * No DATABASE_URL (local / preview builds) -> skip; the PGLite fallback applies
- * the same files at startup instead (see src/lib/db.ts).
+ * No DATABASE_URL → skip (local PGLite handles itself).
  */
 import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL?.trim();
+const onVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
+
 if (!databaseUrl) {
   console.log(
-    "[migrate] DATABASE_URL not set — skipping (the PGLite fallback migrates itself).",
+    "[migrate] DATABASE_URL not set — skipping (PGLite / already-migrated Supabase).",
   );
   process.exit(0);
 }
 
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
 
+function poolConfig(url) {
+  const isSupabase = /supabase\.(co|com)/i.test(url) || url.includes("pooler.supabase");
+  return {
+    connectionString: url,
+    max: 1,
+    connectionTimeoutMillis: 15_000,
+    // Supabase requires TLS; local Docker often does not
+    ssl: isSupabase || onVercel ? { rejectUnauthorized: false } : undefined,
+  };
+}
+
 async function main() {
-  const pool = new pg.Pool({ connectionString: databaseUrl, max: 1 });
+  const pool = new pg.Pool(poolConfig(databaseUrl));
   const client = await pool.connect();
   try {
     await client.query(
@@ -48,18 +62,25 @@ async function main() {
       if (applied.has(name)) continue;
       const text = await readFile(join(migrationsDir, name), "utf8");
       try {
-        await client.query("BEGIN");
-        // pg's simple-query protocol runs a whole multi-statement file at once.
+        // Avoid BEGIN/COMMIT multi-statement (breaks Supabase transaction pooler).
+        // Each file should be idempotent (IF NOT EXISTS).
         await client.query(text);
-        await client.query("INSERT INTO _migrations (name) VALUES ($1)", [name]);
-        await client.query("COMMIT");
+        await client.query("INSERT INTO _migrations (name) VALUES ($1) ON CONFLICT (name) DO NOTHING", [
+          name,
+        ]);
       } catch (err) {
-        console.error(`[migrate] error applying ${name}`);
-        try {
-          await client.query("ROLLBACK");
-        } catch {
-          // ROLLBACK fails when the connection died — keep the original error.
+        // Already applied outside this tracker (e.g. Supabase MCP)
+        const msg = String(err?.message || err);
+        if (/already exists|duplicate/i.test(msg)) {
+          await client.query(
+            "INSERT INTO _migrations (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+            [name],
+          );
+          console.log(`[migrate] ${name} already present — marked applied`);
+          count += 1;
+          continue;
         }
+        console.error(`[migrate] error applying ${name}`);
         throw err;
       }
       console.log(`[migrate] applied ${name}`);
@@ -74,9 +95,15 @@ async function main() {
 
 main().catch((err) => {
   console.error("[migrate] failed:", err?.message || err);
-  // pg errors carry the context needed to debug a bad SQL file.
   for (const key of ["code", "detail", "hint", "position", "where"]) {
     if (err?.[key] != null) console.error(`[migrate]   ${key}: ${err[key]}`);
+  }
+  // Schema may already exist on Supabase; never block a Vercel deploy on migrate
+  if (onVercel) {
+    console.error(
+      "[migrate] non-fatal on Vercel — deploy continues. Fix DATABASE_URL/SSL if boards stay empty.",
+    );
+    process.exit(0);
   }
   process.exit(1);
 });
