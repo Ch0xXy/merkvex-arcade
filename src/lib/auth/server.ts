@@ -35,6 +35,7 @@ import { getCookie } from "@tanstack/react-start/server";
 import { randomBytes } from "node:crypto";
 import { Pool } from "pg";
 import { ensureDbReady, getPglite } from "../db";
+import { resolveDatabaseUrl } from "../databaseUrl";
 import { emailAndPasswordEnabled } from "./email-password";
 import { GROK_PROVIDERS } from "./providers";
 import { pgliteDialect } from "./pglite-dialect";
@@ -125,7 +126,7 @@ const trustedOrigins: string[] = explicitBaseURL
       ...LOCAL_DEV_ORIGINS,
     ];
 
-const databaseUrl = env("DATABASE_URL");
+const databaseUrl = resolveDatabaseUrl(process.env) ?? env("DATABASE_URL");
 const onVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 
 // Static broker OAuth endpoints (skip OIDC discovery on every sign-in / callback).

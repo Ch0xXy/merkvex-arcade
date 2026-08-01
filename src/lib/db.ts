@@ -1,15 +1,15 @@
+import { resolveDatabaseUrl } from "./databaseUrl";
+
 /** Which database backend is active. */
 export type DbSource = "postgres" | "pglite";
 
 /**
  * Resolve DATABASE_URL at call time (not module top-level).
- * Vite/Nitro can evaluate top-level process.env at build time when the var
- * is missing, baking `pglite` into the Vercel bundle permanently.
+ * Supports DATABASE_PASSWORD so special chars don't break the URI.
  */
 function getDatabaseUrl(): string | undefined {
   if (typeof process === "undefined") return undefined;
-  const raw = process.env.DATABASE_URL;
-  return raw && raw.trim() ? raw.trim() : undefined;
+  return resolveDatabaseUrl(process.env);
 }
 
 function isVercelOrProd(): boolean {

@@ -15,7 +15,28 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
+/** Keep in sync with src/lib/databaseUrl.ts */
+function resolveDatabaseUrl(env) {
+  const rawUrl = env.DATABASE_URL?.trim();
+  if (!rawUrl) return undefined;
+  const pass = env.DATABASE_PASSWORD?.trim() || env.SUPABASE_DB_PASSWORD?.trim();
+  let url = rawUrl.replace(/^["']|["']$/g, "");
+  if (pass) {
+    const enc = encodeURIComponent(pass);
+    if (/\[YOUR-PASSWORD\]|\[PASSWORD\]/i.test(url)) {
+      url = url.replace(/\[YOUR-PASSWORD\]|\[PASSWORD\]/gi, enc);
+    } else if (/:\/\/([^:/?]+)@/.test(url) && !/:\/\/[^:]+:[^@]+@/.test(url)) {
+      url = url.replace(/:\/\/([^:/?]+)@/, `://$1:${enc}@`);
+    } else if (/:\/\/([^:]+):([^@]*)@/.test(url)) {
+      url = url.replace(/:\/\/([^:]+):([^@]*)@/, `://$1:${enc}@`);
+    }
+  }
+  if (/supabase\.(co|com)|pooler\.supabase/i.test(url) && !/[?&]sslmode=/i.test(url)) {
+    url += url.includes("?") ? "&sslmode=require" : "?sslmode=require";
+  }
+  return url;
+}
+
 // Vercel sets VERCEL=1 on build + runtime; also treat CI as non-fatal
 const onVercel =
   process.env.VERCEL === "1" ||
@@ -23,6 +44,8 @@ const onVercel =
   Boolean(process.env.VERCEL_ENV) ||
   process.env.CI === "1" ||
   process.env.CI === "true";
+
+const databaseUrl = resolveDatabaseUrl(process.env);
 
 if (!databaseUrl) {
   console.log(
@@ -42,10 +65,7 @@ if (
     "[migrate] DATABASE_URL looks like a placeholder (user/password not real Supabase creds).",
   );
   console.error(
-    "[migrate] Supabase → Project Settings → Database → Connection string (URI).",
-  );
-  console.error(
-    "[migrate] Use the real password (not [YOUR-PASSWORD]). Prefer Session mode if Transaction pooler fails.",
+    "[migrate] Prefer: DATABASE_URL without password + DATABASE_PASSWORD env (raw secret).",
   );
   if (onVercel) {
     console.error("[migrate] non-fatal on Vercel — deploy continues.");
