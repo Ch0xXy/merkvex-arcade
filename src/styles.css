@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-void: #1a0b2e;
+  --color-void-deep: #0a0612;
+  --color-void-mid: #2d1654;
+  --color-void-soft: #3d2470;
+  --color-electric: #f5e642;
+  --color-electric-dim: #c4b82e;
+  --color-cyan: #3ecbff;
+  --color-cyan-dim: #1a9ecf;
+  --color-surface: #120a1f;
+  --color-surface-raised: #1e1233;
+  --color-border: #3a2460;
+  --color-fg: #f0eef6;
+  --color-muted: #9b8fb8;
+  --color-danger: #ff4d6d;
+  --color-success: #3dff9a;
+  --font-display: "Orbitron", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Rajdhani", "Segoe UI", system-ui, sans-serif;
+  --radius-arcade: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-void-deep);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .glow-electric {
+    text-shadow:
+      0 0 8px rgba(245, 230, 66, 0.55),
+      0 0 24px rgba(245, 230, 66, 0.25);
+  }
+
+  .glow-cyan {
+    text-shadow:
+      0 0 8px rgba(62, 203, 255, 0.55),
+      0 0 24px rgba(62, 203, 255, 0.25);
+  }
+
+  .panel-arcade {
+    background:
+      linear-gradient(160deg, rgba(45, 22, 84, 0.55), rgba(10, 6, 18, 0.92)),
+      var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-cyan) 35%, transparent);
+    box-shadow:
+      0 0 0 1px rgba(245, 230, 66, 0.08),
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(62, 203, 255, 0.12);
+  }
+
+  .cabinet-frame {
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(62, 203, 255, 0.12), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(245, 230, 66, 0.08), transparent 50%),
+      linear-gradient(180deg, #12081f 0%, #0a0612 100%);
+  }
+}
