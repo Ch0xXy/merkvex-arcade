@@ -45,8 +45,10 @@ import {
   PREVIEW_CLIENT_SECRET,
 } from "./preview";
 
-// Kick (and share) PGLite bootstrap as soon as the auth server module loads.
-void ensureDbReady();
+// Local PGLite bootstrap only — never on Vercel (no pglite.data in serverless).
+if (process.env.VERCEL !== "1" && process.env.VERCEL !== "true") {
+  void ensureDbReady();
+}
 
 /**
  * Preview secret must outlive module reloads: PGLite (and its session rows) is
@@ -124,6 +126,7 @@ const trustedOrigins: string[] = explicitBaseURL
     ];
 
 const databaseUrl = env("DATABASE_URL");
+const onVercel = process.env.VERCEL === "1" || process.env.VERCEL === "true";
 
 // Static broker OAuth endpoints (skip OIDC discovery on every sign-in / callback).
 // Discovery would cost an extra network hop to the broker before the popup can
@@ -134,13 +137,27 @@ const grokAuthorizationUrl = `${issuerBase}/api/auth/oauth2/authorize`;
 const grokTokenUrl = `${issuerBase}/api/auth/oauth2/token`;
 const grokUserInfoUrl = `${issuerBase}/api/auth/oauth2/userinfo`;
 
-// Real Postgres when `DATABASE_URL` is set (deployed apps), else the app's
-// embedded PGLite (preview) via a Kysely dialect — so Better Auth persists to the
-// SAME DB as app data, including email/password users. Both use the Better Auth
-// schema from `migrations/0001_auth.sql`.
-const database = databaseUrl
-  ? new Pool({ connectionString: databaseUrl })
-  : { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
+// Real Postgres when `DATABASE_URL` is set (Supabase on deploy).
+// PGLite only for local dev — never on Vercel (ENOENT pglite.data).
+function resolveAuthDatabase() {
+  if (databaseUrl) {
+    return new Pool({
+      connectionString: databaseUrl,
+      max: 1,
+      ssl: databaseUrl.includes("supabase")
+        ? { rejectUnauthorized: false }
+        : undefined,
+    });
+  }
+  if (onVercel) {
+    throw new Error(
+      "[auth] DATABASE_URL missing on Vercel. Set Supabase Database URI in " +
+        "Project → Settings → Environment Variables (Production) and Redeploy.",
+    );
+  }
+  return { dialect: pgliteDialect(() => getPglite()), type: "postgres" as const };
+}
+const database = resolveAuthDatabase();
 
 /** Session token cookie name — also read by the live-preview popup completion page. */
 export const SESSION_TOKEN_COOKIE = "__Host-grok-auth.session_token";
