@@ -5,6 +5,7 @@ import type { GameId } from "@/lib/scores";
 import {
   fetchArcadeScores,
   insertArcadeScore,
+  supabaseScoresConfigHint,
   supabaseScoresConfigured,
   trimArcadeScores,
 } from "@/lib/supabaseScores";
@@ -71,9 +72,7 @@ export const getLeaderboard = createServerFn({ method: "GET" })
   })
   .handler(async ({ data }) => {
     if (!supabaseScoresConfigured()) {
-      console.warn(
-        "[leaderboard] SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing — empty board",
-      );
+      console.warn("[leaderboard]", supabaseScoresConfigHint());
       return [] as LeaderboardRow[];
     }
     const rows = await fetchArcadeScores(data.gameId, data.limit);
@@ -94,10 +93,7 @@ export const submitScore = createServerFn({ method: "POST" })
     if (!check.ok) throw new Error(check.reason);
 
     if (!supabaseScoresConfigured()) {
-      throw new Error(
-        "Leaderboards not configured. On Vercel set SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY " +
-          "(Supabase → Project Settings → API). DATABASE_URL is optional now.",
-      );
+      throw new Error(supabaseScoresConfigHint());
     }
 
     const id = newId();

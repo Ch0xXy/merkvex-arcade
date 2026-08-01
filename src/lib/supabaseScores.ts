@@ -17,26 +17,44 @@ export type ArcadeScoreRow = {
   created_at: string;
 };
 
+/** Merkvex prod Supabase — public project URL (not a secret). */
+const MERKVEX_SUPABASE_URL = "https://kywqyvygmvogsgcpbajj.supabase.co";
+
 function supabaseConfig() {
+  // Prefer explicit env; fall back to known Merkvex prod URL so Vercel only needs the key.
   const url = (
     process.env.SUPABASE_URL ||
     process.env.NEXT_PUBLIC_SUPABASE_URL ||
     process.env.VITE_SUPABASE_URL ||
-    ""
+    MERKVEX_SUPABASE_URL
   )
     .trim()
     .replace(/\/$/, "");
   const key = (
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     process.env.SUPABASE_SERVICE_KEY ||
+    process.env.SERVICE_ROLE_KEY ||
     ""
   ).trim();
-  return { url, key };
+  return { url, key, hasKey: Boolean(key) };
 }
 
 export function supabaseScoresConfigured(): boolean {
   const { url, key } = supabaseConfig();
   return Boolean(url && key);
+}
+
+export function supabaseScoresConfigHint(): string {
+  const { hasKey } = supabaseConfig();
+  if (!hasKey) {
+    return (
+      "Missing SUPABASE_SERVICE_ROLE_KEY on Vercel. " +
+      "Supabase → Project Settings → API → service_role (secret). " +
+      "Vercel → merkvex-arcade → Settings → Environment Variables → " +
+      "Name: SUPABASE_SERVICE_ROLE_KEY → paste key → Production → Save → Redeploy."
+    );
+  }
+  return "Supabase scores config incomplete.";
 }
 
 function restHeaders(key: string): HeadersInit {
@@ -54,18 +72,8 @@ export async function fetchArcadeScores(
 ): Promise<ArcadeScoreRow[]> {
   const { url, key } = supabaseConfig();
   if (!url || !key) {
-    throw new Error(
-      "[scores] Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY on Vercel " +
-        "(Project Settings → API). No DATABASE_URL password needed.",
-    );
+    throw new Error(supabaseScoresConfigHint());
   }
-  const q = new URLSearchParams({
-    select: "id,game_id,player_name,score,created_at",
-    game_id: `eq.${gameId}`,
-    order: "score.desc,created_at.asc",
-    limit: String(limit),
-  });
-  // PostgREST: filter is game_id=eq.x not as query param value above wrong
   const res = await fetch(
     `${url}/rest/v1/arcade_scores?select=id,game_id,player_name,score,created_at&game_id=eq.${encodeURIComponent(gameId)}&order=score.desc,created_at.asc&limit=${limit}`,
     { headers: restHeaders(key), method: "GET" },
@@ -85,9 +93,7 @@ export async function insertArcadeScore(row: {
 }): Promise<void> {
   const { url, key } = supabaseConfig();
   if (!url || !key) {
-    throw new Error(
-      "[scores] Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY on Vercel.",
-    );
+    throw new Error(supabaseScoresConfigHint());
   }
   const res = await fetch(`${url}/rest/v1/arcade_scores`, {
     method: "POST",
