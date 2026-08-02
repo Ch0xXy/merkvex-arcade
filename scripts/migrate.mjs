@@ -6,7 +6,7 @@
  * - SSL is required
  * - Transaction pooler (6543) dislikes multi-statement BEGIN blocks → apply
  *   each statement carefully / use IF NOT EXISTS
- * - Failure must not block deploys when schema is already applied via Supabase MCP
+ * - Failure must not block deploys when schema is already applied via proper migrations (never prod MCP DDL)
  *
  * No DATABASE_URL → skip (local PGLite handles itself).
  */
@@ -118,7 +118,7 @@ async function main() {
           name,
         ]);
       } catch (err) {
-        // Already applied outside this tracker (e.g. Supabase MCP)
+        // Already applied outside this tracker (e.g. website supabase/migrations path) - never prod MCP DDL
         const msg = String(err?.message || err);
         if (/already exists|duplicate/i.test(msg)) {
           await client.query(
