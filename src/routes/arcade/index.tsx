@@ -44,62 +44,28 @@ function ArcadeHome() {
     setScores(getAllHighScores());
   }, []);
 
-  const merkvexHideout = import.meta.env.DEV
-    ? "http://127.0.0.1:8797/hideout.html"
-    : "https://merkvex.com/hideout.html";
-  const merkvexSite = import.meta.env.DEV
-    ? "http://127.0.0.1:8797/"
-    : "https://merkvex.com/";
-
   return (
     <div className="min-h-dvh">
       <div className="mx-auto w-full max-w-5xl px-4 pb-16 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <a
-            href={merkvexHideout}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface-raised/80 px-3 py-2 font-display text-[11px] font-bold uppercase tracking-[0.14em] text-cyan transition hover:border-cyan/50 hover:text-electric"
-          >
-            ← Back to Hideout
-          </a>
-          <a
-            href={merkvexSite}
-            className="font-display text-[11px] font-bold uppercase tracking-[0.14em] text-muted transition hover:text-fg"
-          >
-            Merkvex.com
-          </a>
-        </div>
-        <header className="mb-8 text-center sm:mb-12">
-          <div className="mb-4 inline-flex items-center gap-3 rounded-2xl border border-border bg-surface-raised/80 px-4 py-2 backdrop-blur">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-cyan bg-void shadow-[0_0_16px_rgba(62,203,255,0.35)]">
-              <span className="font-display text-sm font-extrabold tracking-tighter text-electric">
-                MV
-              </span>
-            </div>
-            <div className="text-left">
-              <p className="font-display text-[10px] uppercase tracking-[0.28em] text-cyan">
-                by ChoxxyVerse
-              </p>
-              <p className="font-display text-lg font-extrabold tracking-wide text-electric glow-electric sm:text-xl">
-                MERKVEX
-              </p>
-            </div>
-          </div>
-          <h1 className="font-display text-3xl font-extrabold tracking-tight text-fg sm:text-5xl">
+        <header className="mb-8 text-center sm:mb-10">
+          <p className="mb-3 font-display text-[11px] font-bold uppercase tracking-[0.28em] text-cyan">
+            Free play
+          </p>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight text-fg sm:text-5xl">
             <span className="text-electric glow-electric">Arcade</span>{" "}
             <span className="text-cyan glow-cyan">Cabinet</span>
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base">
-            Mini games for the market. Climb the{" "}
-            <span className="text-electric">global top 100</span>. Pick a character, then play.
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted sm:text-base">
+            Ten games. High scores. No pressure — just play.
           </p>
           <div className="mx-auto mt-5 inline-flex max-w-full items-center gap-3 rounded-2xl border border-border/70 bg-void-deep/70 px-3 py-2 sm:px-4">
-            <PilotBay size="sm" label="Last pick" />
+            <PilotBay size="sm" label="You" />
             <p className="text-left text-xs text-muted sm:text-sm">
               <span className="font-display text-[10px] font-bold uppercase tracking-[0.18em] text-cyan">
-                Character
+                Your look
               </span>
               <br />
-              Choose who you play as on each game&apos;s ready screen.
+              Pick a character when you start a game.
             </p>
           </div>
         </header>
@@ -108,7 +74,7 @@ function ArcadeHome() {
           <div className="mb-4 flex items-center gap-2">
             <Gamepad2 className="h-5 w-5 text-cyan" />
             <h2 className="font-display text-sm font-bold uppercase tracking-[0.2em] text-muted">
-              Select cabinet
+              Pick a game
             </h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -157,7 +123,7 @@ function ArcadeHome() {
                   <p className="mt-2 line-clamp-2 text-sm text-muted">{game.blurb}</p>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="font-display text-[10px] uppercase tracking-wider text-muted">
-                      Local best
+                      Your best
                     </span>
                     <span className="font-display text-sm font-bold tabular-nums text-electric">
                       {best.toLocaleString()}
@@ -181,11 +147,11 @@ function ArcadeHome() {
             <div className="mb-3 flex items-center gap-2">
               <Trophy className="h-5 w-5 text-electric" />
               <h2 className="font-display text-sm font-bold uppercase tracking-[0.2em] text-muted">
-                Global leaderboard
+                Leaderboards
               </h2>
             </div>
             <p className="mb-3 text-sm text-muted">
-              Top 100 per cabinet. Switch games to scout the competition before you play.
+              Top scores for each game. Beat the list — or be first on it.
             </p>
             <div className="mb-3 flex flex-wrap gap-1.5">
               {GAMES.map((g) => (
@@ -200,23 +166,20 @@ function ArcadeHome() {
                       : "border-border bg-void-deep text-muted hover:border-cyan hover:text-cyan",
                   )}
                 >
-                  {shortTitle(g.title)}
+                  {g.title}
                 </button>
               ))}
             </div>
             <LeaderboardPanel
               gameId={boardGame}
-              title={`${getTitle(boardGame)} · global top 100`}
+              title={`${getTitle(boardGame)} · top scores`}
               limit={100}
             />
           </div>
         </section>
 
         <footer className="mt-6 text-center text-xs text-muted">
-          <p>
-            Merkvex Arcade Cabinet · characters · global top 100 ·{" "}
-            <span className="text-electric">the market for trading cards</span>
-          </p>
+          <p>Arcade Cabinet · drop a coin · chase the high score</p>
         </footer>
       </div>
     </div>
@@ -225,16 +188,4 @@ function ArcadeHome() {
 
 function getTitle(id: GameId) {
   return GAMES.find((g) => g.id === id)?.title ?? id;
-}
-
-function shortTitle(title: string) {
-  return title
-    .replace("Volt ", "")
-    .replace("Neon ", "")
-    .replace("Vault ", "")
-    .replace("Cipher ", "")
-    .replace("Deck ", "")
-    .replace("Rare ", "")
-    .replace("Market ", "")
-    .replace("Lane ", "");
 }

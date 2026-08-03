@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 const NAME_KEY = "merkvex-arcade-player-name";
 
 export function usePlayerName() {
-  const [name, setName] = useState("Pilot");
+  const [name, setName] = useState("Player");
   useEffect(() => {
     try {
       const saved = localStorage.getItem(NAME_KEY);
       if (saved) {
         const check = checkCallsign(saved);
-        setName(check.ok ? check.name : "Pilot");
+        setName(check.ok ? check.name : "Player");
       }
     } catch {
       /* ignore */
@@ -102,7 +102,7 @@ export function LeaderboardPanel({
       {loading ? (
         <p className="text-sm text-muted">Loading…</p>
       ) : rows.length === 0 ? (
-        <p className="text-sm text-muted">No scores yet - be first.</p>
+        <p className="text-sm text-muted">No scores yet. Be the first.</p>
       ) : (
         <ol
           className={cn(
@@ -179,10 +179,10 @@ export function ScoreSubmitForm({
       const res = await submitScore({
         data: { gameId, playerName: saved.name, score },
       });
-      setMsg(res.rank ? `Posted · rank #${res.rank}` : "Posted to board");
+      setMsg(res.rank ? `On the board · #${res.rank}` : "Saved to the board");
       onSubmitted?.();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Submit failed");
+      setErr(e instanceof Error ? e.message : "Couldn't save — try again");
     } finally {
       setBusy(false);
     }
@@ -191,14 +191,14 @@ export function ScoreSubmitForm({
   return (
     <div className="w-full max-w-sm rounded-xl border border-border/70 bg-void-deep/60 p-3 text-left">
       <p className="mb-2 font-display text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-        Post to global top 100
+        Save your score
       </p>
       <div className="flex gap-2">
         <input
           value={input}
           maxLength={16}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Callsign"
+          placeholder="Your name"
           className="min-w-0 flex-1 rounded-lg border border-border bg-void px-3 py-2 text-sm text-fg outline-none focus:border-cyan"
         />
         <button
@@ -207,7 +207,7 @@ export function ScoreSubmitForm({
           onClick={submit}
           className="rounded-lg bg-electric px-3 py-2 font-display text-xs font-bold uppercase tracking-wider text-void-deep disabled:opacity-50"
         >
-          {busy ? "…" : "Post"}
+          {busy ? "…" : "Save"}
         </button>
       </div>
       {err && <p className="mt-2 text-xs text-danger">{err}</p>}

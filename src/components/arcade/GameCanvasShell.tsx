@@ -46,7 +46,7 @@ export function GameCanvasShell({
   hint,
   readyExtra,
   startDisabled,
-  startLabel = "Play",
+  startLabel = "Start",
   pilotSelect = true,
   pilotLocationHint,
   hidePlayPilot = false,
@@ -75,7 +75,7 @@ export function GameCanvasShell({
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[10px] uppercase tracking-[0.2em] text-muted sm:text-xs">
-            Merkvex Arcade
+            Arcade Cabinet
           </p>
           <h1
             className={cn(
@@ -152,19 +152,18 @@ export function GameCanvasShell({
               background: "linear-gradient(90deg, transparent, #3ecbff, #f5e642, transparent)",
             }}
           />
-          <PilotBay size="sm" label="Active character" />
+          <PilotBay size="sm" label="Playing as" />
           <div className="min-w-0 flex-1 text-left">
             <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
-              Pilot slot
+              Character
             </p>
             <p className="truncate text-xs text-muted">
-              {pilotLocationHint ??
-                "Your agent is locked for this cabinet - also shown on the playfield."}
+              {pilotLocationHint ?? "Shows on the field while you play."}
             </p>
           </div>
           {status === "playing" && !hidePlayPilot && (
             <span className="hidden shrink-0 rounded-full border border-electric/40 bg-electric/10 px-2 py-1 font-display text-[10px] font-bold uppercase tracking-wider text-electric sm:inline">
-              On field
+              Live
             </span>
           )}
         </div>
@@ -187,7 +186,7 @@ export function GameCanvasShell({
             {status === "ready" && (
               <Overlay>
                 <p className="mb-0.5 font-display text-[10px] uppercase tracking-[0.25em] text-cyan sm:text-xs">
-                  Insert coin
+                  Ready?
                 </p>
                 <h2 className="mb-1 font-display text-xl font-bold text-electric glow-electric sm:mb-1.5 sm:text-2xl">
                   {meta.title}
@@ -199,13 +198,13 @@ export function GameCanvasShell({
                 {pilotSelect && (
                   <div className="mb-2 w-full max-w-md rounded-xl border border-border/70 bg-void-deep/60 p-2 text-left sm:mb-2.5 sm:p-3">
                     <div className="mb-2 flex items-center gap-3">
-                      <PilotBay size="sm" label="Your character" caption="selected" />
+                      <PilotBay size="sm" label="You" caption="selected" />
                       <div className="min-w-0 flex-1">
                         <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
-                          Pilot
+                          Pick a look
                         </p>
                         <p className="mt-0.5 truncate text-xs text-muted">
-                          {pilotLocationHint ?? "Appears in the slot and on the field."}
+                          {pilotLocationHint ?? "Optional — just for fun."}
                         </p>
                       </div>
                     </div>
@@ -313,14 +312,14 @@ export function GameCanvasShell({
               }}
             />
             <p className="mb-1.5 text-center font-display text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-              On the field
+              Character
             </p>
-            <PilotBay size="md" label="" caption="on deck" className="mx-auto" />
+            <PilotBay size="md" label="" caption="in play" className="mx-auto" />
           </div>
           <div className="min-h-0 flex-1 overflow-hidden">
             <LeaderboardPanel
               gameId={meta.id as GameId}
-              title="Global top 100"
+              title="High scores"
               limit={100}
               refreshKey={boardKey + (status === "over" ? 1 : 0)}
               className="h-full max-h-full"
