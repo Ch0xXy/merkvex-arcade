@@ -83,7 +83,7 @@ export function AgentPicker({ compact = false, className, onChange, showHint = t
           </p>
           {showHint && (
             <p className="mt-0.5 text-[11px] text-muted">
-              Pick who you pilot. Later: unlocks sync from Merkvex ownership.
+              Pick who you play as. Later: unlocks sync from Merkvex ownership.
             </p>
           )}
         </div>
@@ -191,7 +191,7 @@ function AgentCard({
       type="button"
       onClick={onPick}
       disabled={!unlocked}
-      title={unlocked ? char.name : `${char.name} — unlock in Merkvex`}
+      title={unlocked ? char.name : `${char.name} · unlock in Merkvex`}
       className={cn(
         compact ? "w-[80px] shrink-0" : "w-full",
         "group relative overflow-hidden rounded-xl border text-left transition",
@@ -259,7 +259,7 @@ export function ActiveAgentChip({ className }: { className?: string }) {
       <img src={char.idle} alt="" className="h-8 w-8 object-contain" />
       <div className="min-w-0 text-left">
         <p className="truncate font-display text-[10px] font-bold text-fg">{char.name}</p>
-        <p className="text-[9px] uppercase tracking-wider text-muted">pilot</p>
+        <p className="text-[9px] uppercase tracking-wider text-muted">character</p>
       </div>
     </div>
   );

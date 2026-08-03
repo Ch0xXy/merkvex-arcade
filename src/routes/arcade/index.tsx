@@ -44,9 +44,30 @@ function ArcadeHome() {
     setScores(getAllHighScores());
   }, []);
 
+  const merkvexHideout = import.meta.env.DEV
+    ? "http://127.0.0.1:8797/hideout.html"
+    : "https://merkvex.com/hideout.html";
+  const merkvexSite = import.meta.env.DEV
+    ? "http://127.0.0.1:8797/"
+    : "https://merkvex.com/";
+
   return (
     <div className="min-h-dvh">
       <div className="mx-auto w-full max-w-5xl px-4 pb-16 pt-6 sm:px-6 sm:pt-10">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <a
+            href={merkvexHideout}
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface-raised/80 px-3 py-2 font-display text-[11px] font-bold uppercase tracking-[0.14em] text-cyan transition hover:border-cyan/50 hover:text-electric"
+          >
+            ← Back to Hideout
+          </a>
+          <a
+            href={merkvexSite}
+            className="font-display text-[11px] font-bold uppercase tracking-[0.14em] text-muted transition hover:text-fg"
+          >
+            Merkvex.com
+          </a>
+        </div>
         <header className="mb-8 text-center sm:mb-12">
           <div className="mb-4 inline-flex items-center gap-3 rounded-2xl border border-border bg-surface-raised/80 px-4 py-2 backdrop-blur">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-cyan bg-void shadow-[0_0_16px_rgba(62,203,255,0.35)]">
@@ -68,18 +89,17 @@ function ArcadeHome() {
             <span className="text-cyan glow-cyan">Cabinet</span>
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base">
-            Ten neon mini games. Climb the{" "}
-            <span className="text-electric">global top 100</span>. Pick your pilot inside each
-            cabinet before you play.
+            Mini games for the market. Climb the{" "}
+            <span className="text-electric">global top 100</span>. Pick a character, then play.
           </p>
           <div className="mx-auto mt-5 inline-flex max-w-full items-center gap-3 rounded-2xl border border-border/70 bg-void-deep/70 px-3 py-2 sm:px-4">
-            <PilotBay size="sm" label="Last pilot" />
+            <PilotBay size="sm" label="Last pick" />
             <p className="text-left text-xs text-muted sm:text-sm">
               <span className="font-display text-[10px] font-bold uppercase tracking-[0.18em] text-cyan">
-                Pilot
+                Character
               </span>
               <br />
-              Choose agents on the game ready screen.
+              Choose who you play as on each game&apos;s ready screen.
             </p>
           </div>
         </header>
@@ -186,7 +206,7 @@ function ArcadeHome() {
             </div>
             <LeaderboardPanel
               gameId={boardGame}
-              title={`${getTitle(boardGame)} — global top 100`}
+              title={`${getTitle(boardGame)} · global top 100`}
               limit={100}
             />
           </div>
@@ -194,7 +214,7 @@ function ArcadeHome() {
 
         <footer className="mt-6 text-center text-xs text-muted">
           <p>
-            Merkvex Arcade · pilot loadout · global top 100 ·{" "}
+            Merkvex Arcade Cabinet · characters · global top 100 ·{" "}
             <span className="text-electric">the market for trading cards</span>
           </p>
         </footer>
@@ -214,5 +234,7 @@ function shortTitle(title: string) {
     .replace("Vault ", "")
     .replace("Cipher ", "")
     .replace("Deck ", "")
-    .replace("Whack-a-", "");
+    .replace("Rare ", "")
+    .replace("Market ", "")
+    .replace("Lane ", "");
 }

@@ -8,12 +8,12 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       {
-        title: "Merkvex Arcade — mini games for card traders",
+        title: "Merkvex Arcade Cabinet · mini games for card traders",
       },
       {
         name: "description",
         content:
-          "Play Volt Breakout, Deck Flyer, Whack-a-Agent, Neon Coil, and Vault Jumper — Merkvex arcade cabinet games.",
+          "Play Volt Breakout, Deck Flyer, Rare Rush, Neon Coil, and more. Mini games for the Merkvex market.",
       },
       { name: "theme-color", content: "#0a0612" },
     ],

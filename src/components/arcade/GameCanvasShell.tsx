@@ -53,7 +53,7 @@ export function GameCanvasShell({
   onPause,
   onResume,
   pauseTitle = "Paused",
-  pauseMessage = "Take a breath — resume when you're ready.",
+  pauseMessage = "Take a breath. Resume when you're ready.",
   resumeLabel = "Resume",
   overTitle = "Game Over",
   overEyebrow = "Session ended",
@@ -152,7 +152,7 @@ export function GameCanvasShell({
               background: "linear-gradient(90deg, transparent, #3ecbff, #f5e642, transparent)",
             }}
           />
-          <PilotBay size="sm" label="Active pilot" />
+          <PilotBay size="sm" label="Active character" />
           <div className="min-w-0 flex-1 text-left">
             <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
               Pilot slot
@@ -199,7 +199,7 @@ export function GameCanvasShell({
                 {pilotSelect && (
                   <div className="mb-2 w-full max-w-md rounded-xl border border-border/70 bg-void-deep/60 p-2 text-left sm:mb-2.5 sm:p-3">
                     <div className="mb-2 flex items-center gap-3">
-                      <PilotBay size="sm" label="Your pilot" caption="selected" />
+                      <PilotBay size="sm" label="Your character" caption="selected" />
                       <div className="min-w-0 flex-1">
                         <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
                           Pilot
@@ -267,7 +267,7 @@ export function GameCanvasShell({
                   {overTitle}
                 </h2>
                 <div className="mb-1.5">
-                  <PilotBay size="sm" label="Run pilot" />
+                  <PilotBay size="sm" label="This run" />
                 </div>
                 <p className="mb-0.5 font-display text-3xl font-bold text-electric glow-electric sm:text-4xl">
                   {score}
@@ -313,7 +313,7 @@ export function GameCanvasShell({
               }}
             />
             <p className="mb-1.5 text-center font-display text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-              Field pilot
+              On the field
             </p>
             <PilotBay size="md" label="" caption="on deck" className="mx-auto" />
           </div>
