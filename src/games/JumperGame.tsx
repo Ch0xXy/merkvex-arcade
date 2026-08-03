@@ -373,8 +373,8 @@ export function JumperGame() {
       }}
       onStart={startGame}
       hidePlayPilot
-      pilotLocationHint="Your pilot stands on the vault pads — they are the jumper you steer."
-      hint="A/D or drag · pilot your selected agent"
+      pilotLocationHint="Your character bounces the pads. Grab pickups for combos."
+      hint="A/D or drag · climb forever"
     >
       <canvas
         ref={canvasRef}

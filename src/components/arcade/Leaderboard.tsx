@@ -36,7 +36,7 @@ export function usePlayerName() {
 
 export function LeaderboardPanel({
   gameId,
-  title = "Global top 100",
+  title = "High scores",
   refreshKey = 0,
   compact = false,
   limit,
@@ -198,7 +198,8 @@ export function ScoreSubmitForm({
           value={input}
           maxLength={16}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Your name"
+          placeholder="Your callsign"
+          aria-label="Callsign"
           className="min-w-0 flex-1 rounded-lg border border-border bg-void px-3 py-2 text-sm text-fg outline-none focus:border-cyan"
         />
         <button
@@ -207,7 +208,7 @@ export function ScoreSubmitForm({
           onClick={submit}
           className="rounded-lg bg-electric px-3 py-2 font-display text-xs font-bold uppercase tracking-wider text-void-deep disabled:opacity-50"
         >
-          {busy ? "…" : "Save"}
+          {busy ? "…" : "Post"}
         </button>
       </div>
       {err && <p className="mt-2 text-xs text-danger">{err}</p>}

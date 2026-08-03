@@ -254,7 +254,7 @@ export function RunnerGame() {
       }}
       onStart={start}
       hidePlayPilot
-      pilotLocationHint="Your pilot sprints the center lanes — switch lanes to dodge junk and scoop charge."
+      pilotLocationHint="Your character runs the lanes. Swap to dodge. Scoop charge."
       hint="← → lanes · scoop cyan/yellow · dodge pink junk"
     >
       <canvas

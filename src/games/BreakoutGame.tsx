@@ -930,8 +930,8 @@ export function BreakoutGame() {
       }
       resumeLabel={pauseKind === "level" ? "Next level" : "Resume"}
       hidePlayPilot
-      pilotLocationHint="Your pilot rides the paddle at the bottom — protect them and smash the wall."
-      hint="← → / A D · 3 lives · P/Esc pause · clear board to rest"
+      pilotLocationHint="Your character rides the paddle. Don't drop the spark."
+      hint="← → / A D · 3 lives · P/Esc pause · clear the wall"
     >
       <canvas
         ref={canvasRef}

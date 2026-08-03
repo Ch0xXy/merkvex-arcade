@@ -62,10 +62,10 @@ function ArcadeHome() {
             <PilotBay size="sm" label="You" />
             <p className="text-left text-xs text-muted sm:text-sm">
               <span className="font-display text-[10px] font-bold uppercase tracking-[0.18em] text-cyan">
-                Your look
+                Character
               </span>
               <br />
-              Pick a character when you start a game.
+              Pick one when you start a game.
             </p>
           </div>
         </header>
@@ -179,7 +179,7 @@ function ArcadeHome() {
         </section>
 
         <footer className="mt-6 text-center text-xs text-muted">
-          <p>Arcade Cabinet · drop a coin · chase the high score</p>
+          <p>Arcade Cabinet · free play · chase the high score</p>
         </footer>
       </div>
     </div>

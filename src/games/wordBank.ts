@@ -33,10 +33,10 @@ export type CategoryMeta = {
 };
 
 export const CATEGORIES: CategoryMeta[] = [
-  { id: "merkvex", label: "Merkvex", blurb: "Brand, agents, rarities", accent: "electric" },
+  { id: "merkvex", label: "Neon Brand", blurb: "Arcade brand words", accent: "electric" },
   { id: "cyberpunk", label: "Cyberpunk", blurb: "Net, chrome, corps", accent: "cyan" },
   { id: "space", label: "Space", blurb: "Orbit, stars, void", accent: "violet" },
-  { id: "market", label: "Market", blurb: "Trade, tokens, floor", accent: "electric" },
+  { id: "market", label: "Trade", blurb: "Buy, sell, tokens", accent: "electric" },
   { id: "tech", label: "Tech", blurb: "Code, systems, data", accent: "cyan" },
   { id: "arcade", label: "Arcade", blurb: "Games, scores, play", accent: "electric" },
   { id: "animals", label: "Animals", blurb: "Creatures (original)", accent: "mint" },

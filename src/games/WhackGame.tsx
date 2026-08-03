@@ -638,8 +638,8 @@ export function WhackGame() {
         setScore(0);
       }}
       onStart={start}
-      pilotLocationHint="Your pilot sits in the HUD bay. Other agents pop on the vault pads — smack them."
-      hint="45s — tap agents on neon vault pads. Rares pay more."
+      pilotLocationHint="Your character sits in the HUD. Critters pop on the pads — tap them."
+      hint="45s — tap critters. Rares score more."
     >
       <canvas
         ref={canvasRef}

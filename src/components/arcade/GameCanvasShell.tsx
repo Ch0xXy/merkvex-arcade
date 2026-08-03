@@ -152,7 +152,7 @@ export function GameCanvasShell({
               background: "linear-gradient(90deg, transparent, #3ecbff, #f5e642, transparent)",
             }}
           />
-          <PilotBay size="sm" label="Playing as" />
+          <PilotBay size="sm" label="Character" />
           <div className="min-w-0 flex-1 text-left">
             <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
               Character
@@ -178,7 +178,7 @@ export function GameCanvasShell({
             {status === "playing" && !hidePlayPilot && (
               <div className="pointer-events-none absolute left-2 top-2 z-10 sm:hidden">
                 <div className="rounded-xl border border-border/70 bg-[rgba(8,4,16,0.72)] px-1.5 py-1 backdrop-blur-sm">
-                  <PilotBay size="sm" label="Pilot" />
+                  <PilotBay size="sm" label="Character" />
                 </div>
               </div>
             )}
@@ -201,7 +201,7 @@ export function GameCanvasShell({
                       <PilotBay size="sm" label="You" caption="selected" />
                       <div className="min-w-0 flex-1">
                         <p className="font-display text-[10px] font-bold uppercase tracking-[0.2em] text-cyan">
-                          Pick a look
+                          Pick a character
                         </p>
                         <p className="mt-0.5 truncate text-xs text-muted">
                           {pilotLocationHint ?? "Optional — just for fun."}
@@ -314,7 +314,7 @@ export function GameCanvasShell({
             <p className="mb-1.5 text-center font-display text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
               Character
             </p>
-            <PilotBay size="md" label="" caption="in play" className="mx-auto" />
+            <PilotBay size="md" label="" caption="playing" className="mx-auto" />
           </div>
           <div className="min-h-0 flex-1 overflow-hidden">
             <LeaderboardPanel

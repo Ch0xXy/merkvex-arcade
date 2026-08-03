@@ -265,8 +265,8 @@ export function FlappyGame() {
       }}
       onStart={start}
       hidePlayPilot
-      pilotLocationHint="Your pilot flies the neon lanes — they are the bird on the field."
-      hint="Tap / space to flap · your selected agent"
+      pilotLocationHint="Your character flies the lanes. Tap to climb."
+      hint="Tap / space to climb · thread the gaps"
     >
       <canvas
         ref={canvasRef}

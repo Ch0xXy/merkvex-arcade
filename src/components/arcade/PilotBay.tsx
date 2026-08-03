@@ -17,14 +17,14 @@ type Props = {
 };
 
 /**
- * Consistent "avatar location" — neon pad + portrait for the selected pilot.
+ * Consistent avatar pad + portrait for the selected character.
  * Same visual language on ready screens, HUDs, and game stages.
  */
 export function PilotBay({
   size = "md",
   className,
   agent,
-  label = "Pilot bay",
+  label = "Character",
   damage = 0,
   caption,
 }: Props) {

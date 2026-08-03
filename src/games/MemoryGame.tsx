@@ -47,7 +47,7 @@ const SIZE_META: Record<
     clearBonus: 450,
   },
   12: {
-    label: "Deep vault",
+    label: "Deep",
     blurb: "24 cards · clear all",
     grid: "grid-cols-6 grid-rows-4",
     cols: 6,
@@ -278,14 +278,14 @@ export function MemoryGame() {
       readyExtra={readyExtra}
       hidePlayPilot
       overIsWin
-      overTitle="Vault Clear"
-      overEyebrow="Board complete"
+      overTitle="Board clear"
+      overEyebrow="All pairs matched"
       overStatusLabel="CLEAR"
-      pilotLocationHint="Your pilot is the dealer mascot. Cards are random vault agents."
+      pilotLocationHint="Your character is the mascot. Flip cards. Match pairs."
       hint={
         status === "playing"
           ? `Clear board ${matches * 2}/${boardSize * 2} · ${moves} flips · combo x${combo}`
-          : "Clear every card · rarity + combos · accuracy bonus on full clear"
+          : "Match every pair · combos pay more · clear the board"
       }
     >
       <div className="absolute inset-0 flex flex-col overflow-hidden bg-gradient-to-b from-[#22063a] via-[#0e0520] to-[#05020e]">

@@ -40,7 +40,7 @@ export const GAMES: GameMeta[] = [
     title: "Gap Glide",
     tagline: "One tap at a time",
     blurb: "Thread the gaps. Timing is everything.",
-    controls: "Flap: click / space / tap",
+    controls: "Tap: click / space / touch",
     accent: "cyan",
     icon: "flappy",
   },

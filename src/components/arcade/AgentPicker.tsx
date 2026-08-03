@@ -83,7 +83,7 @@ export function AgentPicker({ compact = false, className, onChange, showHint = t
           </p>
           {showHint && (
             <p className="mt-0.5 text-[11px] text-muted">
-              Pick a look. Just for fun.
+              Pick a character. Just for fun.
             </p>
           )}
         </div>
@@ -153,7 +153,7 @@ export function AgentPicker({ compact = false, className, onChange, showHint = t
             ))}
           </div>
           <p className="mt-1 text-center text-[10px] text-muted">
-            Scroll · {roster.length} looks
+            Scroll · {roster.length} characters
           </p>
         </div>
       ) : (

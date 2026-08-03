@@ -49,8 +49,8 @@ const TOWER_COST = 55;
 const LEVELS: LevelDef[] = [
   {
     id: 1,
-    name: "Vault Gate",
-    blurb: "S-bend mid lanes · outer columns free to shoot",
+    name: "Gate Run",
+    blurb: "S-bend mid lanes · outer pads free to shoot",
     waves: 3,
     starter: { gx: 0, gy: 3 },
     path: [
@@ -78,7 +78,7 @@ const LEVELS: LevelDef[] = [
   },
   {
     id: 2,
-    name: "Subnet Bend",
+    name: "Double Bend",
     blurb: "Double U · outer pads cover every turn",
     waves: 3,
     starter: { gx: 0, gy: 3 },
@@ -749,7 +749,7 @@ export function TowerGame() {
       }}
       onStart={start}
       hidePlayPilot
-      pilotLocationHint="Your pilot is the free starter tower. Serpentine paths mean edge pads can shoot too."
+      pilotLocationHint="Your character is the first pad. Tap empty pads to place more."
       hint={`Lvl ${levelUi} ${levelName} · ⚡${energy} · Core ${core} · tap pads (${TOWER_COST}⚡)`}
     >
       <canvas

@@ -306,7 +306,7 @@ export function HangmanGame() {
       startLabel={poolSize ? "Play" : "Pick a pack"}
       readyExtra={readyExtra}
       hidePlayPilot
-      pilotLocationHint="Your pilot stands on the cipher stage (left). Wrong letters glitch them offline."
+      pilotLocationHint="Wrong guesses hurt your character. Don't run out of tries."
       hint={`Type or tap letters · ${catLabel}`}
     >
       <div className="absolute inset-0 flex flex-col overflow-hidden bg-gradient-to-b from-[#22063a] via-[#0e0520] to-[#05020e] px-3 py-2 sm:px-5 sm:py-3">
@@ -404,7 +404,7 @@ export function HangmanGame() {
             {!round && status === "ready" && (
               <div className="mb-4 flex flex-1 flex-col items-center justify-center text-center">
                 <p className="font-display text-sm text-muted">
-                  Pick packs & pilot, then hit Play.
+                  Pick packs, then hit Play.
                 </p>
               </div>
             )}

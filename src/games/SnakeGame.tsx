@@ -293,8 +293,8 @@ export function SnakeGame() {
       }}
       onStart={startGame}
       hidePlayPilot
-      pilotLocationHint="Your pilot is the coil head — guide their face through the grid."
-      hint="WASD / arrows / swipe · scoop energy pods"
+      pilotLocationHint="Your character is the coil head. Guide them. Don't hit walls."
+      hint="WASD / arrows / swipe · eat orbs · grow"
     >
       <canvas
         ref={canvasRef}

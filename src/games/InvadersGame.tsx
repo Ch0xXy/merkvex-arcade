@@ -355,8 +355,8 @@ export function InvadersGame() {
       }}
       onStart={start}
       hidePlayPilot
-      pilotLocationHint="Your pilot is the ship at the bottom — move and shoot the swarm."
-      hint={`Wave defense · ${lives} lives · space to fire`}
+      pilotLocationHint="Your character is the ship. Move and shoot the swarm."
+      hint={`Hold the line · ${lives} lives · space to fire`}
     >
       <canvas
         ref={canvasRef}
