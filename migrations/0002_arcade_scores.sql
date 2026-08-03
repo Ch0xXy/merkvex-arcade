@@ -20,7 +20,11 @@ create index if not exists arcade_scores_game_score_idx
 
 -- Harden grants if this file is ever applied on a role that has CREATEROLE defaults.
 -- Owner retains full rights; PostgREST roles get nothing.
+-- Role-by-role revoke: PGLite local has no anon/authenticated/service_role
+-- (hard-failing REVOKE killed `npm run dev` with role "anon" does not exist).
 do $$
+declare
+  r text;
 begin
   if exists (
     select 1 from pg_class c
@@ -28,6 +32,16 @@ begin
     where n.nspname = 'public' and c.relname = 'arcade_scores'
   ) then
     execute 'alter table public.arcade_scores enable row level security';
-    execute 'revoke all on table public.arcade_scores from public, anon, authenticated, service_role';
+    foreach r in array array['public', 'anon', 'authenticated', 'service_role']
+    loop
+      if exists (select 1 from pg_roles where rolname = r)
+         or r = 'public' then
+        begin
+          execute format('revoke all on table public.arcade_scores from %I', r);
+        exception when others then
+          null; -- role missing or already revoked
+        end;
+      end if;
+    end loop;
   end if;
 end $$;
