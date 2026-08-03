@@ -102,7 +102,7 @@ export function LeaderboardPanel({
       {loading ? (
         <p className="text-sm text-muted">Loading…</p>
       ) : rows.length === 0 ? (
-        <p className="text-sm text-muted">No scores yet. Be the first.</p>
+        <p className="text-sm text-muted">Board is empty. Drop a score and own first place.</p>
       ) : (
         <ol
           className={cn(

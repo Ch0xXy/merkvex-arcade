@@ -20,29 +20,33 @@ export type GameMeta = {
     | "memory";
 };
 
-/** Standalone arcade — names/copy only need to be fun and clear. */
+/**
+ * Display names must NOT match real commercial game trademarks
+ * (no Breakout, Invaders, Snake, Memory, Flappy, etc.).
+ * Internal ids stay stable for scores/leaderboards.
+ */
 export const GAMES: GameMeta[] = [
   {
     id: "breakout",
-    title: "Breakout",
+    title: "Brick Volt",
     tagline: "Smash the wall",
-    blurb: "Bounce the ball. Clear every brick. Don't drop it.",
+    blurb: "Bounce the spark. Clear every brick. Don't drop it.",
     controls: "Move: mouse / touch / arrows · P pause",
     accent: "electric",
     icon: "breakout",
   },
   {
     id: "flappy",
-    title: "Sky Flap",
+    title: "Gap Glide",
     tagline: "One tap at a time",
-    blurb: "Flap through the gaps. Timing is everything.",
+    blurb: "Thread the gaps. Timing is everything.",
     controls: "Flap: click / space / tap",
     accent: "cyan",
     icon: "flappy",
   },
   {
     id: "whack",
-    title: "Pop!",
+    title: "Critter Pop",
     tagline: "Hit them before they vanish",
     blurb: "Tap the critters. Rarer ones score bigger.",
     controls: "Click / tap targets",
@@ -51,7 +55,7 @@ export const GAMES: GameMeta[] = [
   },
   {
     id: "snake",
-    title: "Coil",
+    title: "Neon Coil",
     tagline: "Grow or crash",
     blurb: "Eat the orbs. Don't hit the walls — or yourself.",
     controls: "WASD / arrows / swipe",
@@ -60,16 +64,16 @@ export const GAMES: GameMeta[] = [
   },
   {
     id: "jumper",
-    title: "Jumper",
+    title: "Pad Climb",
     tagline: "Climb forever",
-    blurb: "Bounce up the platforms. Grab pickups for combos.",
+    blurb: "Bounce up the pads. Grab pickups for combos.",
     controls: "Move: A/D · arrows · drag",
     accent: "electric",
     icon: "jumper",
   },
   {
     id: "hangman",
-    title: "Word Scramble",
+    title: "Letter Lock",
     tagline: "Guess the word",
     blurb: "Pick a pack. Fill in the letters. Don't run out of tries.",
     controls: "Type or tap letters",
@@ -78,7 +82,7 @@ export const GAMES: GameMeta[] = [
   },
   {
     id: "invaders",
-    title: "Invaders",
+    title: "Swarm Hold",
     tagline: "Hold the line",
     blurb: "Shoot the swarm before it reaches you.",
     controls: "Move: arrows / A D · Shoot: space / tap",
@@ -87,16 +91,16 @@ export const GAMES: GameMeta[] = [
   },
   {
     id: "tower",
-    title: "Tower Guard",
+    title: "Path Guard",
     tagline: "Defend the path",
-    blurb: "Place towers. Spend energy. Stop the rush.",
+    blurb: "Place pads. Spend energy. Stop the rush.",
     controls: "Tap empty pads to place · drag to pan",
     accent: "cyan",
     icon: "tower",
   },
   {
     id: "runner",
-    title: "Runner",
+    title: "Lane Dash",
     tagline: "Three lanes. Don't crash.",
     blurb: "Swap lanes. Dodge junk. Grab charge.",
     controls: "Lanes: arrows / A D / swipe · 1 2 3",
@@ -105,7 +109,7 @@ export const GAMES: GameMeta[] = [
   },
   {
     id: "memory",
-    title: "Memory",
+    title: "Pair Flip",
     tagline: "Match the pairs",
     blurb: "Flip cards. Find matches. Clear the board.",
     controls: "Tap cards · pick a board size",

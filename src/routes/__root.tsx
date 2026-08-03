@@ -13,7 +13,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Free arcade games with high scores. Breakout, Sky Flap, Pop!, Coil, Jumper, and more.",
+          "Free arcade games with high scores. Brick Volt, Gap Glide, Critter Pop, Neon Coil, and more.",
       },
       { name: "theme-color", content: "#0a0612" },
     ],
