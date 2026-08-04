@@ -65,6 +65,35 @@ Then use that as `MX_ARCADE_ORIGIN`.
 | Change game code | Push to `merkvex-arcade` GitHub → Vercel auto-redeploys |
 | Shared global top 100 | Set `DATABASE_URL` on Vercel + redeploy |
 
+## merkvex.com/arcade cutover (Option B — Netlify proxy, Sam-ratified 2026-08-04)
+
+Goal: the arcade lives at **https://merkvex.com/arcade** (no new domain).
+The code support is already merged and **inert by default** — nothing changes
+until step 1. Order matters:
+
+1. **Vercel env flip:** Project → Settings → Environment Variables → add
+   `ARCADE_BASE` = `/arcade/` (Production) → **Redeploy**.
+   - What it does: every asset/page URL moves under `/arcade/` (Vite `base`),
+     and the build mirrors static output so `merkvex-arcade.vercel.app/arcade`
+     keeps working standalone (`scripts/subpath-assets.mjs`).
+   - Verify: `https://merkvex-arcade.vercel.app/arcade` loads with working
+     styles/games (view source: asset URLs start `/arcade/assets/`).
+2. **Netlify rules:** in the main site's `netlify.toml`, uncomment the
+   "ARCADE PROXY" block (three rules: `/arcade`, `/arcade/*`, `/_serverFn/*`)
+   → `netlify deploy --prod --dir .`.
+   - Verify: `https://merkvex.com/arcade` plays a game end to end and the
+     leaderboard loads (that round-trips `/_serverFn/*`).
+3. **Flip the doors:** point `arcade.html` cabinet links (and
+   `mx_arcade_origin` default) at `/arcade` instead of the vercel.app URL.
+4. Optional later: Vercel redirect vercel.app → merkvex.com/arcade once
+   traffic is confirmed.
+
+Asset-collision answer: the main site owns `/assets/`; the arcade under this
+plan owns `/arcade/assets/` and `/_serverFn/` — zero overlap, no strip-prefix
+rewriting, cookies first-party on merkvex.com. Auth/multiplayer template code
+is unused by the arcade routes, so no OAuth broker redirect-URI changes are
+needed for this cutover.
+
 ## Local dev only (optional)
 
 ```powershell

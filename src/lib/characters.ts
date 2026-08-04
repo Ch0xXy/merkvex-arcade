@@ -11,7 +11,9 @@ export type Character = {
 };
 
 // bump when clean sprites are regenerated so clients don't keep stale PNGs
-const CLEAN = "/characters/clean";
+// BASE_URL prefix: public-dir absolute paths bypass Vite's `base`, so the
+// subpath deploy (ARCADE_BASE=/arcade/) must add its own prefix here.
+const CLEAN = import.meta.env.BASE_URL.replace(/\/$/, "") + "/characters/clean";
 const V = "v4";
 
 function char(

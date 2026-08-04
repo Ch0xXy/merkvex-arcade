@@ -124,7 +124,31 @@ function authPopupPlugin(): Plugin {
 // opens a second dev-server port, which breaks the single-port preview.
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
+
+/**
+ * Subpath serving (merkvex.com/arcade cutover, Sam-ratified Option B
+ * 2026-08-04): set ARCADE_BASE=/arcade/ in the deploy environment and every
+ * emitted URL — client assets, router basepath (derived by the Start plugin
+ * from Vite `base`), server-fn base — moves under that prefix, so the Netlify
+ * proxy can forward merkvex.com/arcade/* prefix-preserved with zero collision
+ * against the main site's own /assets/. UNSET (the default "/") nothing
+ * changes: the standalone vercel.app deployment and the :8080 dev preview
+ * contract behave exactly as before. Page routes already live at /arcade/*
+ * in the route tree, so with the base set the app is self-contained under
+ * /arcade/ — pages at /arcade/, assets at /arcade/assets/.
+ */
+const ARCADE_BASE = (() => {
+  const raw = process.env.ARCADE_BASE || "/";
+  // Git Bash on Windows path-converts "/arcade/" to "C:/.../arcade/" — fail
+  // loudly instead of baking a filesystem path into every asset URL.
+  if (!/^\/[a-z0-9/_-]*$/i.test(raw)) {
+    throw new Error(`ARCADE_BASE looks mangled: "${raw}" — expected e.g. "/arcade/". On Git Bash use MSYS_NO_PATHCONV=1 or run from PowerShell.`);
+  }
+  return raw.endsWith("/") ? raw : raw + "/";
+})();
+
 export default defineConfig(({ command }) => ({
+  base: ARCADE_BASE,
   server: {
     host: "0.0.0.0",
     port: 8080,
@@ -136,7 +160,12 @@ export default defineConfig(({ command }) => ({
     // Before tanstackStart so /auth/popup never falls through to the SPA.
     authPopupPlugin(),
     tailwindcss(),
-    tanstackStart(),
+    // basepath PINNED to "/": the route tree already carries the /arcade/*
+    // prefix (routes/arcade/…), so letting the plugin derive a basepath from
+    // Vite `base` would double it (/arcade/arcade/). With the pin: pages stay
+    // at /arcade/* from the tree, assets move with `base`, and server-fn RPC
+    // stays at /_serverFn/* (proxied by its own Netlify rule).
+    tanstackStart({ router: { basepath: "/" } }),
     ...(command === "build" ? [nitro({ preset: "vercel" })] : []),
     viteReact(),
   ],
