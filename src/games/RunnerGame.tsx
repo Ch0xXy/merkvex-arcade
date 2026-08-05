@@ -121,8 +121,8 @@ export function RunnerGame() {
       s.laneX += (targetX - s.laneX) * Math.min(1, dt * 14);
       s.lane = s.targetLane;
 
-      // Player sits mid-low — not glued to the bottom — for reaction time
-      const playerY = api.height * 0.58;
+      // Lower on the road (was 0.58) — more runway to read junk; feet near bottom third
+      const playerY = api.height * 0.74;
 
       s.spawnAcc += dt;
       const every = Math.max(0.48, 0.95 - s.dist * 0.00003);
@@ -213,9 +213,9 @@ export function RunnerGame() {
         }
       }
 
-      // player
+      // player (matches update playerY = 0.74)
       const px = s.laneX || width / 2;
-      const py = height * 0.58 + Math.sin(s.bob) * 3;
+      const py = height * 0.74 + Math.sin(s.bob) * 3;
       ctx.shadowColor = s.pilot.accent;
       ctx.shadowBlur = 18;
       if (s.pilotImg) drawSprite(ctx, s.pilotImg, px - 34, py - 40, 68, 68);
@@ -257,29 +257,65 @@ export function RunnerGame() {
       pilotLocationHint="Your character runs the lanes. Swap to dodge. Scoop charge."
       hint="← → lanes · scoop cyan/yellow · dodge pink junk"
     >
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full touch-none"
-        onPointerDown={(e) => {
-          if (statusRef.current === "ready") start();
-          state.current.touchStartX = e.clientX;
-        }}
-        onPointerUp={(e) => {
-          const startX = state.current.touchStartX;
-          state.current.touchStartX = null;
-          if (startX == null) return;
-          const dx = e.clientX - startX;
-          if (Math.abs(dx) < 24) {
-            // tap lane under finger
-            const rect = canvasRef.current?.getBoundingClientRect();
-            if (!rect) return;
-            const x = e.clientX - rect.left;
-            setLane(Math.floor((x / rect.width) * LANES));
-            return;
-          }
-          setLane(state.current.targetLane + (dx > 0 ? 1 : -1));
-        }}
-      />
+      <div className="absolute inset-0">
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 h-full w-full touch-none"
+          onPointerDown={(e) => {
+            if (statusRef.current === "ready") start();
+            state.current.touchStartX = e.clientX;
+          }}
+          onPointerUp={(e) => {
+            const startX = state.current.touchStartX;
+            state.current.touchStartX = null;
+            if (startX == null) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) < 24) {
+              // tap lane under finger
+              const rect = canvasRef.current?.getBoundingClientRect();
+              if (!rect) return;
+              const x = e.clientX - rect.left;
+              setLane(Math.floor((x / rect.width) * LANES));
+              return;
+            }
+            setLane(state.current.targetLane + (dx > 0 ? 1 : -1));
+          }}
+        />
+        {/* On-screen lane arrows (mobile + desktop click) */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex items-end justify-between px-3 sm:bottom-4 sm:px-4"
+          aria-hidden={status === "over"}
+        >
+          <button
+            type="button"
+            className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-cyan/70 bg-surface-raised/90 text-2xl font-black text-cyan shadow-[0_0_20px_rgba(62,203,255,0.35)] transition active:scale-95 disabled:opacity-40 sm:h-16 sm:w-16 sm:text-3xl"
+            aria-label="Lane left"
+            disabled={status === "over"}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (statusRef.current === "ready") start();
+              setLane(state.current.targetLane - 1);
+            }}
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-cyan/70 bg-surface-raised/90 text-2xl font-black text-cyan shadow-[0_0_20px_rgba(62,203,255,0.35)] transition active:scale-95 disabled:opacity-40 sm:h-16 sm:w-16 sm:text-3xl"
+            aria-label="Lane right"
+            disabled={status === "over"}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (statusRef.current === "ready") start();
+              setLane(state.current.targetLane + 1);
+            }}
+          >
+            →
+          </button>
+        </div>
+      </div>
     </GameCanvasShell>
   );
 }

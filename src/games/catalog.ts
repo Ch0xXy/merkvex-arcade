@@ -103,7 +103,7 @@ export const GAMES: GameMeta[] = [
     title: "Lane Dash",
     tagline: "Three lanes. Don't crash.",
     blurb: "Swap lanes. Dodge junk. Grab charge.",
-    controls: "Lanes: arrows / A D / swipe · 1 2 3",
+    controls: "Lanes: on-screen ← → · arrows / A D / swipe · 1 2 3",
     accent: "electric",
     icon: "runner",
   },

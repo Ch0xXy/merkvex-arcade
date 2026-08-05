@@ -30,7 +30,8 @@ export function SnakeGame() {
     cols: 18,
     rows: 22,
     acc: 0,
-    step: 0.14,
+    /* 0.14 → ~0.156: ~10% slower base tick (scale 10 → 9) */
+    step: 0.1556,
     score: 0,
     grow: 0,
     touchStart: null as Point | null,
@@ -75,7 +76,7 @@ export function SnakeGame() {
     s.score = 0;
     s.grow = 0;
     s.acc = 0;
-    s.step = 0.14;
+    s.step = 0.1556;
     s.time = 0;
     setScore(0);
     placePod(s.cols, s.rows);
@@ -165,7 +166,7 @@ export function SnakeGame() {
           s.score += s.pod.value;
           setScore(s.score);
           s.grow += s.pod.kind === "violet" ? 3 : s.pod.kind === "yellow" ? 2 : 1;
-          s.step = Math.max(0.07, s.step * 0.985);
+          s.step = Math.max(0.0778, s.step * 0.985);
           placePod(s.cols, s.rows);
         } else if (s.grow > 0) {
           s.grow -= 1;
